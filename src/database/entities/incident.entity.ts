@@ -30,8 +30,11 @@ export class IncidentEntity extends CustomEntity{
     @Column ({ name: 'details', length: 255, unique: true, nullable: false })
     details: string;
 
-    @Column ({ name: 'peopleInvolved', length: 255, unique: true, nullable: false })
-    peopleInvolved: string;
+    @Column ({ name: 'status', default:'PENDING', nullable: false })
+    status: string;
+
+    @Column ({ name: 'feesPaid', default: false, nullable: false })
+    feesPaid: boolean;
 
     @Column ({ name: 'certificate', length: 255, unique: true, nullable: false })
     certificate: string;

@@ -11,6 +11,11 @@ import { BackgroundCheckController } from './background-check/background-check.c
 import { BackgroundCheckModule } from './background-check/background-check.module';
 import { IncidentReportModule } from './incident-report/incident-report.module';
 import { MedicalModule } from './medical/medical.module';
+import { DashboardService } from './dashboard/dashboard.service';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,9 +24,11 @@ import { MedicalModule } from './medical/medical.module';
     StaffListModule,
     BackgroundCheckModule,
     IncidentReportModule,
-    MedicalModule
+    MedicalModule,
+    DashboardModule,
+    AuthModule
   ],
-  controllers: [AppController, StaffListController, BackgroundCheckController],
-  providers: [AppService, StaffListService, BackgroundCheckService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
