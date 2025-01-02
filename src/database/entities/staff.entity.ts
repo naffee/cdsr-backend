@@ -1,11 +1,12 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne } from 'typeorm';
 import { CustomEntity } from './custom.entity';
 import { IncidentEntity } from './incident.entity';
+import { BackgroundCheckEntity } from './background-check.entity';
 
-@Entity('Case')
-export class DriverEntity extends CustomEntity {
-  @Column ({ name: 'image', length: 255, unique: true, nullable: false })
-  image: string;
+@Entity('Staff')
+export class StaffEntity extends CustomEntity {
+  @Column ({ name: 'profileImage', length: 255, unique: true, nullable:false  })
+  profileImage: string;
 
   @Column({ name: 'firstName', length: 255, unique: true, nullable: false })
   firstName: string;
@@ -34,8 +35,8 @@ export class DriverEntity extends CustomEntity {
   @Column({ name: 'gender', length: 255, unique: true, nullable: false })
   gender: string;
 
-  @Column({ name: 'DOB', type: 'date', nullable: false })
-  DOB: Date;
+  // @Column({ name: 'DOB', type: 'date', nullable: false })
+  // DOB: Date;
 
   @Column({ name: 'workMode', length: 255, unique: false, nullable: false })
   workMode: string;
@@ -43,8 +44,12 @@ export class DriverEntity extends CustomEntity {
   @Column({ name: 'driverLicense', length: 255, unique: true, nullable: false })
   driverLicense: string;
 
-  @Column({ name: 'licenseExpiryDate',type:'date' })
-  licenseExpiryDate: Date;
+  @Column({ name: 'fullName', select: false })
+  fullName: string;
+
+
+  // @Column({ name: 'licenseExpiryDate',type:'date' })
+  // licenseExpiryDate: Date;
 
   @Column({ name: 'jobDescription', length: 255, unique: true, nullable: false })
   jobDescription: string;
@@ -55,9 +60,24 @@ export class DriverEntity extends CustomEntity {
   @Column({ name: 'previousEmployment', length: 255, unique: false, nullable: false })
   previousEmployment: string;
 
-  @ManyToMany(() => IncidentEntity, (incident) => incident.driver)
-  @JoinTable()
-  incident:IncidentEntity;
+  @Column({ name: 'employmentStatus', length: 255, unique: false, nullable: false })
+  employmentStatus: string;
+
+  @Column({ name: 'status', length: 255, unique: false, nullable: false })
+  status: string;
+
+  @Column({ type: 'enum',enum: ['Driver', 'Domestic Staff', 'Security Guard'] })
+  staffType: 'Driver' | 'Domestic Staff' | 'Security Guard';
+
+  // @ManyToMany(() => IncidentEntity, (incident) => incident.staffsInvolved)
+  // @JoinTable()
+  // incidents:IncidentEntity[];
+
+  @OneToMany(() => IncidentEntity, (incident) => incident.PrimaryStaff)
+  incidents: IncidentEntity[];
+
+  @OneToMany(() => BackgroundCheckEntity, (backgroundCheck) => backgroundCheck.staff)
+  backgroundChecks: BackgroundCheckEntity[];
 
 
 

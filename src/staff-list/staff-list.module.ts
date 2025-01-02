@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DriverEntity } from 'src/database/entities/driver.entity';
-import { DomestinStaffEntity } from 'src/database/entities/domestic_staff.entity';
-import { SecuirityGuardEntity } from 'src/database/entities/secuirity_guard.entity';
+import { StaffEntity } from 'src/database/entities/staff.entity';
 import { IncidentEntity } from 'src/database/entities/incident.entity';
 import { StaffListController } from './staff-list.controller';
 import { StaffListService } from './staff-list.service';
@@ -10,7 +8,7 @@ import { StaffListService } from './staff-list.service';
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            SecuirityGuardEntity,DomestinStaffEntity,DriverEntity,IncidentEntity
+            StaffEntity,IncidentEntity
         ])
     ],
     controllers: [StaffListController],

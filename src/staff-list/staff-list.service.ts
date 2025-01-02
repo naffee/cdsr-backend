@@ -1,76 +1,35 @@
 import { Injectable,Logger,UnauthorizedException,NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateDriverDto,CreateDomesticStaffDto,CreateSecuirityGuardDto } from './staff-list.dto';
-import { DriverEntity } from 'src/database/entities/driver.entity';
-import { SecuirityGuardEntity } from 'src/database/entities/secuirity_guard.entity';
-import { DomestinStaffEntity } from 'src/database/entities/domestic_staff.entity';
-
+import { CreateStaffDto, } from './staff-list.dto';
+import { StaffEntity } from 'src/database/entities/staff.entity';
 
 @Injectable()
 export class StaffListService {
     private readonly logger = new Logger(StaffListService.name);
 
     constructor(
-        @InjectRepository(DriverEntity)
-        private readonly driverRepository: Repository<DriverEntity>,
-        @InjectRepository(DomestinStaffEntity)
-        private readonly domesticStaffRepository: Repository<DomestinStaffEntity>,
-        @InjectRepository(SecuirityGuardEntity)
-        private readonly secuirityGuardRepository: Repository<SecuirityGuardEntity>,
+        @InjectRepository(StaffEntity)
+        private readonly staffRepository: Repository<StaffEntity>,
 
     ) {}
 
-    async createDriver(createDriverDto: CreateDriverDto):Promise<DriverEntity>{
-        const newDriver = this.driverRepository.create(createDriverDto)
-        return this.driverRepository.save(newDriver);
+    async createStaff(createStaffDto: CreateStaffDto):Promise<StaffEntity>{
+        const newStaff = this.staffRepository.create(createStaffDto)
+        return this.staffRepository.save(newStaff);
 
     };
 
-    async createSecuirityGuard(createSecuirityGuardDto:CreateSecuirityGuardDto):Promise<SecuirityGuardEntity>{
-        const newSecuirityGuard = this.secuirityGuardRepository.create(createSecuirityGuardDto)
-        return this.secuirityGuardRepository.save(newSecuirityGuard);
-
-    };
-
-    async createDomescticStaff(createDomescticStaffDto: CreateDomesticStaffDto): Promise<DomestinStaffEntity>{
-        const newDomesticStaff = this.domesticStaffRepository.create(createDomescticStaffDto)
-        return this.domesticStaffRepository.save(newDomesticStaff);
-    };
-
-    async getAllDrivers():Promise<DriverEntity[]>{
-        return this.driverRepository.find();
+    async getAllStaff():Promise<StaffEntity[]>{
+        return this.staffRepository.find();
     }
 
-    async getAllSecurityGuards():Promise<SecuirityGuardEntity[]>{
-        return this.secuirityGuardRepository.find();
-    }
-
-    async getAllDomesticStaffs():Promise<DomestinStaffEntity[]>{
-        return this.domesticStaffRepository.find();
-    }
-
-    async getOneDriver(id: string):Promise<DriverEntity>{
-        const driver = await this.driverRepository.findOne({where:{id}});
-        if(!driver){
-            throw new NotFoundException('driver not found')
+    async getOneStaff(id: string):Promise<StaffEntity>{
+        const staff = await this.staffRepository.findOne({where:{id}});
+        if(!staff){
+            throw new NotFoundException('staff not found')
         }
-        return driver
+        return staff
     }
 
-    async getOneSecuirityGuard(id: string):Promise<SecuirityGuardEntity>{
-        const securityGuard = await this.secuirityGuardRepository.findOne({where:{id}});
-        if(!securityGuard){
-            throw new NotFoundException('security not found')
-        }
-        return securityGuard
-    }
-
-    async getOneDomesticStaff(id: string):Promise<DomestinStaffEntity>{
-        const domesticstaff = await this.domesticStaffRepository.findOne({where:{id}});
-        if(!domesticstaff){
-            throw new NotFoundException('domestic staff not found')
-        }
-        return domesticstaff;
-    }
 }

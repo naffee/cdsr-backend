@@ -10,19 +10,19 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(
-    email: string,
-    password: string,
-  ): Promise<any> {
-    this.logger.log(`Validating credentials for ${email}`);
-    this.logger.log(`Validating credentials for ${email}`);
-    console.log('email', email,);
-    const user = await this.authService.login(email, password);
+   async validate(
+     email: string,
+     password: string,
+   ): Promise<any> {
+     this.logger.log(`Validating credentials for ${email}`);
+     this.logger.log(`Validating credentials for ${email}`);
+     console.log('email', email,);
+     const user = await this.authService.login(email, password);
 
-    if (!user) {
-      throw new UnauthorizedException('wrong email or password');
-    }
+     if (!user) {
+       throw new UnauthorizedException('wrong email or password');
+     }
 
-    return user;
-  }
+     return user;
+   }
 }

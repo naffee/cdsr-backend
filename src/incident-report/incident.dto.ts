@@ -1,18 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsNotEmpty, IsOptional, isString, IsString, IsUrl, Length, ValidateNested } from 'class-validator';
+import { AuthEntity } from 'src/database/entities/auth.entity';
 
 export class IncidentDto{
-    @ApiProperty({example:'9', description: 'id of the staff'})
+
+    @ApiProperty({description:'Full name of staff'})
     @IsNotEmpty()
     @IsString()
-    id: string;
-
-    @ApiProperty({example: 'Jane Doe', description: 'name of staff'})
-    @IsNotEmpty()
-    @IsString()
-    name: string;
-
+    fullName: string;
+    
     @ApiProperty({example:'9:00', description:'time of the incident'})
     @IsNotEmpty()
     @IsString()
@@ -57,4 +54,56 @@ export class IncidentDto{
     @IsNotEmpty()
     @IsUrl()
     certificate: string;
+
+    @ApiProperty({description:'Full name of reporter of the staff'})
+    @IsNotEmpty()
+    @IsString()
+    reportedBy: string;
+
+    @ApiProperty({description:'Category of the incident'})
+    @IsNotEmpty()
+    @IsString()
+    category: string;
+
+    @ApiProperty({description:'Status of the case'})
+    @IsNotEmpty()
+    @IsString()
+    status: string;
+
+    @ApiProperty({description:'Name of agent assigned to the case'})
+    @IsNotEmpty()
+    @IsString()
+    cdsrAgent: string;
+}
+
+export class IncidentDashboardDto{
+    @ApiProperty({description:'Id of incident'})
+    @IsNotEmpty()
+    @IsString()
+    incidentId: string;
+    
+    @ApiProperty({description:'Date the incident was reported'})
+    @IsNotEmpty()
+    @IsString()
+    date: string;
+
+    @ApiProperty({description:'category of incident'})
+    @IsNotEmpty()
+    @IsString()
+    category: string;
+
+    @ApiProperty({description:'Reporter of incident'})
+    @IsNotEmpty()
+    @IsString()
+    reportedBy: string;
+
+    @ApiProperty({description:'status of incident'})
+    @IsNotEmpty()
+    @IsString()
+    status: string;
+
+    @ApiProperty({description:'Agent assigned to incident'})
+    @IsNotEmpty()
+    @IsString()
+    assignedAgent: string;
 }

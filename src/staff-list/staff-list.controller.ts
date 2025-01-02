@@ -4,64 +4,33 @@ import { ApiBearerAuth,ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/helper/guards/roles.guard';
 import { Roles } from 'src/helper/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/helper/guards/jwt-auth.guard';
-import { CreateDriverDto,CreateDomesticStaffDto,CreateSecuirityGuardDto } from './staff-list.dto';
+import { CreateStaffDto, } from './staff-list.dto';
+import { UsePipes,ValidationPipe } from '@nestjs/common';
 
 @Controller('staff-list')
 export class StaffListController {
     constructor (private readonly staffListService: StaffListService ) {}
 
-    @ApiTags('Driver')
-    @Post('create-driver')
-    createDriver(@Body() dto: CreateDriverDto){
-        return this.staffListService.createDriver(dto)
+    @ApiTags('Staff')
+    @Post('create-staff')
+    @UsePipes(new ValidationPipe({ transform: true }))
+    createStaff(@Body() dto: CreateStaffDto){
+        return this.staffListService.createStaff(dto)
     }
 
-    @ApiTags('SecurityGuard')
-    @Post('create-securityGuard')
-    createSecurityGuard(@Body() dto: CreateSecuirityGuardDto){
-        return this.staffListService.createSecuirityGuard(dto)
-    }
 
-    @ApiTags('')
-    @Post('create-driver')
-    createDomesticStaff(@Body() dto: CreateDomesticStaffDto){
-        return this.staffListService.createDomescticStaff(dto)
-    }
-
-    @ApiTags('Driver')
-    @Get('get-driver')
+    @ApiTags('Staff')
+    @Get('get-staff')
     getAllDriver(){
-        return this.staffListService.getAllDrivers()
+        return this.staffListService.getAllStaff()
     }
 
-    @ApiTags('Security-Guard')
-    @Get('get-security-guard')
-    getAllSecurityGuards(){
-        return this.staffListService.getAllSecurityGuards()
-    }
 
-    @ApiTags('Domestic-Staff')
-    @Get('get-domestic-staff')
-    getAllDomesticStaffs(){
-        return this.staffListService.getAllDomesticStaffs()
-    }
-
-    @ApiTags('Driver')
-    @Get('get-driver/:id')
+    @ApiTags('Staff')
+    @Get('get-staff/:id')
     getOneDriver(@Param('id') id: string){
-        return this.staffListService.getOneDriver(id)
+        return this.staffListService.getOneStaff(id)
     }
 
-    @ApiTags('Security-Guard')
-    @Get('get-security-guard/:id')
-    getOneSecurirtyGuard(@Param('id') id: string){
-        return this.staffListService.getOneSecuirityGuard(id)
-    }
-
-    @ApiTags('Domestic-Staff')
-    @Get('get-domestic-staff/id')
-    getOneDomesticStaff(@Param('id') id: string){
-        return this.staffListService.getOneDriver(id)
-    }
 }
 

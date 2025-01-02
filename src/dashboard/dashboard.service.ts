@@ -1,35 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DriverEntity } from 'src/database/entities/driver.entity';
-import { SecuirityGuardEntity } from 'src/database/entities/secuirity_guard.entity';
-import { DomestinStaffEntity } from 'src/database/entities/domestic_staff.entity';
 import { IncidentEntity } from 'src/database/entities/incident.entity';
+import { BackgroundCheckEntity } from 'src/database/entities/background-check.entity';
+import { StaffEntity } from 'src/database/entities/staff.entity';
 
 @Injectable()
 export class DashboardService {
 
     constructor (
-        @InjectRepository(DriverEntity)
-        private readonly driverRepository: Repository<DriverEntity>,
-        @InjectRepository(DomestinStaffEntity)
-        private readonly domesticStaffRepository: Repository<DomestinStaffEntity>,
-        @InjectRepository(SecuirityGuardEntity)
-        private readonly secuirityGuardRepository: Repository<SecuirityGuardEntity>,
         @InjectRepository(IncidentEntity)
         private readonly incidentRepository: Repository<IncidentEntity>,
+        @InjectRepository(BackgroundCheckEntity)
+        private readonly backgroundRepository: Repository<BackgroundCheckEntity>,
+        @InjectRepository(StaffEntity)
+        private readonly staffRepository: Repository<StaffEntity>,
     ){}
 
-    async Dashboard(): Promise<any>{
-        const totalRegisteredDrivers = await this.driverRepository.count
-        const totalRegisteredSecurity = await this.secuirityGuardRepository.count;
-        const totalRegisteredDomestic = await this.domesticStaffRepository.count;
-        //const backgroundChecks
+    async getStaff(){
+        const totalRegisteredStaff = await this.staffRepository.count()
+        const verifiedStaff = await this.staffRepository.count({where: {status: 'verified'}})
+        const flaggedStaff = await this.staffRepository.count({where: {status: 'flagged'}})
+        const terminatedStaff = await this.staffRepository.count({where: {status: 'terminated'}})
 
-        return [totalRegisteredDomestic,totalRegisteredDrivers,totalRegisteredSecurity]
-        
-
+        return({totalRegisteredStaff,verifiedStaff,flaggedStaff,terminatedStaff})
     }
 
-    async quickTransactions(){}
+    async getBackgroundChecks(){
+        const totalBackgroundChecks = await this.backgroundRepository.count()
+        const pendingBackgroundChecks = await this.backgroundRepository.count({where: {status: 'pending'}})
+
+        return({totalBackgroundChecks,pendingBackgroundChecks})
+    }
+
 }

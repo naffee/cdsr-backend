@@ -18,7 +18,7 @@ require('dotenv').config();
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/database/migrations/*.js'],
       migrationsRun: false,
-      logging: false,
+      logging: true,
       ssl:
         process.env.MODE === 'production'
           ? {

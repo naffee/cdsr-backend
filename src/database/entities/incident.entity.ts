@@ -1,18 +1,16 @@
 import { Column, Entity, OneToMany, OneToOne, ManyToOne, ManyToMany } from 'typeorm';
 import { CustomEntity } from './custom.entity';
-import { DriverEntity } from './driver.entity';
-import { DomestinStaffEntity } from './domestic_staff.entity';
-import { SecuirityGuardEntity } from './secuirity_guard.entity';
+import { StaffEntity } from './staff.entity';
+import { AuthEntity } from './auth.entity';
+
 
 @Entity ('Incident')
-export class IncidentEntity extends CustomEntity{
-    @Column ({ name: 'name', length: 255, unique: true, nullable: false })
-    name: string;
+export class IncidentEntity extends CustomEntity {
 
     @Column ({ name: 'time', type:'time' })
     time: string;
 
-    @Column ({ name: 'image', type:'date' })
+    @Column ({ name: 'date', type:'date' })
     date: Date;
 
     @Column ({ name: 'street', length: 255, unique: true, nullable: false })
@@ -33,20 +31,43 @@ export class IncidentEntity extends CustomEntity{
     @Column ({ name: 'status', default:'PENDING', nullable: false })
     status: string;
 
-    @Column ({ name: 'feesPaid', default: false, nullable: false })
-    feesPaid: boolean;
+    // @Column ({ name: 'feesPaid', default: false, nullable: false })
+    // feesPaid: boolean;
 
     @Column ({ name: 'certificate', length: 255, unique: true, nullable: false })
     certificate: string;
 
-    @ManyToMany(() => DriverEntity, (driver) => driver.incident)
-    driver: DriverEntity;
+    @Column ({ name: 'category', length: 255, unique: true, nullable: false })
+    category: string;
 
-    @ManyToMany(() => DomestinStaffEntity, (domesticStaff) => domesticStaff.incident)
-    domesticStaff: DomestinStaffEntity;
+    @Column ({ name: 'peopleInvolved', length: 255, unique: true, nullable: false })
+    peopleInvolved: string;
 
-    @ManyToMany(() => SecuirityGuardEntity, (securityGuard) => securityGuard.incident)
-    securityGuard: SecuirityGuardEntity;
+    @Column ({ name: 'cdsrAgent', length: 255, unique: false, nullable: false })
+    cdsrAgent: string;
+
+    // @ManyToMany(() => StaffEntity, (staff) => staff.incidents)
+    // staffsInvolved: StaffEntity[];
+
+    @Column({name: 'CDSR-ID', length: 255, unique: true, nullable: false})
+    incidentId: string;
+
+     @ManyToOne(() => AuthEntity,(user) => user.reportedIncidents,
+     {eager: true})
+     reportedBy: AuthEntity;
+
+    //  @ManyToOne(() => UserEntity,(user) => user.assignedIncidents,
+    //  {eager: true})
+    //  assignedAgent: UserEntity;
+
+    @ManyToOne(() => StaffEntity,(staff) => staff.incidents,
+    {eager: true})
+    PrimaryStaff: StaffEntity;
+
+
+
+
+
 
 
 }

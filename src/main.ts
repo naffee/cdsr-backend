@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('FMOJ MODULE')
-    .setDescription('API documentation for the FMOJ')
+    .setDescription('API documentation for the CDSR')
     .setVersion('1.0')
     .addTag('')
     .addBearerAuth()

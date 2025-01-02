@@ -1,44 +1,40 @@
-import { Column, Entity } from 'typeorm';
-import { CustomEntity } from './custom.entity';
+import {Entity, Column,} from 'typeorm'
+import { CustomEntity } from './custom.entity'
+import { OneToMany } from 'typeorm';
+import { IncidentEntity } from './incident.entity';
 
-
-@Entity('Case')
+@Entity('Auth')
 export class AuthEntity extends CustomEntity {
-  @Column({ name: 'fullName', length: 255, unique: true, nullable: false })
-  fullName: string;
+    @Column({name: 'email', length: 255, nullable: false })
+    email: string;
 
-  @Column({ name: 'DOB', type:'date', nullable: false})
-  DOB: Date;
+    @Column({name: 'fullName', length: 255,  nullable: false })
+    fullName: string;
 
-  @Column({ name: 'email', length: 255, unique: true, nullable: false })
-  email: string;
+    @Column({name: 'BVN', length: 11, nullable: false })
+    BVN: string;
 
-  @Column({ name: 'BVN', length: 11, unique: true, nullable: false })
-  BVN: string;
+    @Column ({name: 'NIN', length: 11, nullable: false })
+    NIN: string;
 
-  @Column({ name: 'NIN', length: 11, unique: true, nullable: false })
-  NIN: string;
+    @Column({name: 'DOB', type: 'date' })
+    DOB: Date;
 
-  @Column({ name: 'phoneNumber', length: 255, unique: true, nullable: false })
-  phoneNumber: string;
+    @Column({name: 'password', length: 255, nullable: false })
+    password: string;
 
-  @Column({ name: 'password', length: 255, unique: true, nullable: false })
-  password: string;
+    @Column({name: 'refreshToken', length: 255, nullable: true })
+    refreshToken: string;
 
-  @Column({ name: 'refresh_token', nullable: true })
-  refreshToken: string;
+    @Column({name: 'refreshTokenExpiry', type: 'date', nullable: true })
+    refreshTokenExpiry: Date;
 
-  @Column({ name: 'refresh_token_expiry', type: 'timestamp', nullable: true })
-  refreshTokenExpiry: Date;
+    // @Column({name: 'otp', length: 4 })
+    // otp: string;
 
-  @Column({ name: 'password_change', default: false, nullable: true })
-  passwordChange: boolean;
+    // @Column({name: 'otpExpiry', type: 'timestamp' })
+    // otpExpiry: Date;
 
-  @Column({ name: 'otp', length: 255, nullable: true })
-  otp: string;
-
-  @Column({ name: 'otp_expiry', type: 'date', nullable: true })
-  otpExpiry: Date;
-
-
+    @OneToMany(() => IncidentEntity, (incident) => incident.reportedBy)
+    reportedIncidents: IncidentEntity[];
 }

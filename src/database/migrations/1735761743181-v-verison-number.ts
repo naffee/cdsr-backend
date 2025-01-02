@@ -1,0 +1,30 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class VVerisonNumber1735761743181 implements MigrationInterface {
+    name = 'VVerisonNumber1735761743181'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "Staff" ("id" SERIAL NOT NULL, "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "profileImage" character varying(255) NOT NULL, "firstName" character varying(255) NOT NULL, "middleName" character varying(255) NOT NULL, "lastName" character varying(255) NOT NULL, "phoneNumber" character varying(255) NOT NULL, "emailAddress" character varying(255) NOT NULL, "lastKnownAddress" character varying(255) NOT NULL, "tribe" character varying(255) NOT NULL, "religion" character varying(255) NOT NULL, "gender" character varying(255) NOT NULL, "workMode" character varying(255) NOT NULL, "driverLicense" character varying(255) NOT NULL, "fullName" character varying NOT NULL, "jobDescription" character varying(255) NOT NULL, "certificate" character varying(255) NOT NULL, "previousEmployment" character varying(255) NOT NULL, "staffType" character varying(10) NOT NULL, CONSTRAINT "UQ_ca110cd048a766549097c1cf10b" UNIQUE ("profileImage"), CONSTRAINT "UQ_186ef8399ce37a86ad48e8f8fe5" UNIQUE ("firstName"), CONSTRAINT "UQ_d5212bbc8d736e1d520d92ca150" UNIQUE ("middleName"), CONSTRAINT "UQ_ba0f2f27c9818e6c80cc982c97d" UNIQUE ("lastName"), CONSTRAINT "UQ_1551df0388b2234bacc7b1d2271" UNIQUE ("phoneNumber"), CONSTRAINT "UQ_617d855f17a606c367d1be8dcc3" UNIQUE ("emailAddress"), CONSTRAINT "UQ_92d86cbfc4f3fe3d5df1498fce7" UNIQUE ("lastKnownAddress"), CONSTRAINT "UQ_0f1296a66d4939782f97a818d5d" UNIQUE ("tribe"), CONSTRAINT "UQ_58ba4f3d4b7708f68647077b12b" UNIQUE ("religion"), CONSTRAINT "UQ_43159538c369cafbb74291fd444" UNIQUE ("gender"), CONSTRAINT "UQ_fd7c89bd1a68bef105926aed39e" UNIQUE ("driverLicense"), CONSTRAINT "UQ_944159e9766eecf3567c26be374" UNIQUE ("jobDescription"), CONSTRAINT "UQ_4fbec1554ec907c095261e3094f" UNIQUE ("certificate"), CONSTRAINT "PK_9ab06d37f3877439b4361d1bf78" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "Incident" ("id" SERIAL NOT NULL, "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "name" character varying(255) NOT NULL, "time" TIME NOT NULL, "image" date NOT NULL, "street" character varying(255) NOT NULL, "city" character varying(255) NOT NULL, "LGA" character varying(255) NOT NULL, "state" character varying(255) NOT NULL, "details" character varying(255) NOT NULL, "status" character varying NOT NULL DEFAULT 'PENDING', "feesPaid" boolean NOT NULL DEFAULT false, "certificate" character varying(255) NOT NULL, "category" character varying(255) NOT NULL, "CDSR-ID" character varying(255) NOT NULL, "primaryStaffId" integer, CONSTRAINT "UQ_15478408754493ae372a3ce4add" UNIQUE ("name"), CONSTRAINT "UQ_10a034391438f7f3bcf48146003" UNIQUE ("street"), CONSTRAINT "UQ_e4a3153a0fe5b0640238c315e7f" UNIQUE ("city"), CONSTRAINT "UQ_b288914a1c9606ff7e259151f74" UNIQUE ("LGA"), CONSTRAINT "UQ_5a6bd6ebbbc2a1b15a70c83c36a" UNIQUE ("state"), CONSTRAINT "UQ_2fd1cca158c22f071a2b55e8bb3" UNIQUE ("details"), CONSTRAINT "UQ_a0fd47a717050e1bc3d68617ad5" UNIQUE ("certificate"), CONSTRAINT "UQ_5f87a7a47ffa5e6ae0075b876fd" UNIQUE ("category"), CONSTRAINT "UQ_6dc2237f247fc426b20f9ce8608" UNIQUE ("CDSR-ID"), CONSTRAINT "PK_1639834f13b16d92d6eafbb9b2a" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "Auth" ("id" SERIAL NOT NULL, "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "email" character varying(255) NOT NULL, "fullName" character varying(255) NOT NULL, "BVN" character varying(11) NOT NULL, "NIN" character varying(11) NOT NULL, "DOB" date NOT NULL, "password" character varying(255) NOT NULL, "refreshToken" character varying(255), "refreshTokenExpiry" date, CONSTRAINT "PK_fee4a2ee6693dbef79c39ff336d" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "staff_incidents_incident" ("staffId" integer NOT NULL, "incidentId" integer NOT NULL, CONSTRAINT "PK_f9e7aa8ad9e790b104cb8832586" PRIMARY KEY ("staffId", "incidentId"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_01e8f6eff47f7e8e41a9c3eaa9" ON "staff_incidents_incident" ("staffId") `);
+        await queryRunner.query(`CREATE INDEX "IDX_48dd54126557e8e57ab2356462" ON "staff_incidents_incident" ("incidentId") `);
+        await queryRunner.query(`ALTER TABLE "Incident" ADD CONSTRAINT "FK_403035ad62eb8e8e7cca7349216" FOREIGN KEY ("primaryStaffId") REFERENCES "Staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "staff_incidents_incident" ADD CONSTRAINT "FK_01e8f6eff47f7e8e41a9c3eaa9b" FOREIGN KEY ("staffId") REFERENCES "Staff"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "staff_incidents_incident" ADD CONSTRAINT "FK_48dd54126557e8e57ab2356462e" FOREIGN KEY ("incidentId") REFERENCES "Incident"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "staff_incidents_incident" DROP CONSTRAINT "FK_48dd54126557e8e57ab2356462e"`);
+        await queryRunner.query(`ALTER TABLE "staff_incidents_incident" DROP CONSTRAINT "FK_01e8f6eff47f7e8e41a9c3eaa9b"`);
+        await queryRunner.query(`ALTER TABLE "Incident" DROP CONSTRAINT "FK_403035ad62eb8e8e7cca7349216"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_48dd54126557e8e57ab2356462"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_01e8f6eff47f7e8e41a9c3eaa9"`);
+        await queryRunner.query(`DROP TABLE "staff_incidents_incident"`);
+        await queryRunner.query(`DROP TABLE "Auth"`);
+        await queryRunner.query(`DROP TABLE "Incident"`);
+        await queryRunner.query(`DROP TABLE "Staff"`);
+    }
+
+}
