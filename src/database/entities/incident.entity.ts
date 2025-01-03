@@ -7,7 +7,7 @@ import { AuthEntity } from './auth.entity';
 @Entity ('Incident')
 export class IncidentEntity extends CustomEntity {
 
-    @Column ({ name: 'time', type:'time' })
+    @Column ({ name: 'time', type:'timestamp' })
     time: string;
 
     @Column ({ name: 'date', type:'date' })

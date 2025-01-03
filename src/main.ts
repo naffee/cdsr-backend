@@ -8,7 +8,7 @@ async function bootstrap() {
   app.enableCors();
 
   const options = new DocumentBuilder()
-    .setTitle('FMOJ MODULE')
+    .setTitle('CDSR MODULE')
     .setDescription('API documentation for the CDSR')
     .setVersion('1.0')
     .addTag('')

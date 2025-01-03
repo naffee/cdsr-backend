@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne } from 'type
 import { CustomEntity } from './custom.entity';
 import { IncidentEntity } from './incident.entity';
 import { BackgroundCheckEntity } from './background-check.entity';
+import { MedicalTestEntity } from './medical.entity';
 
 @Entity('Staff')
 export class StaffEntity extends CustomEntity {
@@ -78,6 +79,11 @@ export class StaffEntity extends CustomEntity {
 
   @OneToMany(() => BackgroundCheckEntity, (backgroundCheck) => backgroundCheck.staff)
   backgroundChecks: BackgroundCheckEntity[];
+
+  @ManyToMany(() => MedicalTestEntity, (medicalTest) => medicalTest.staff)
+  medicalTests: MedicalTestEntity[];
+
+
 
 
 
