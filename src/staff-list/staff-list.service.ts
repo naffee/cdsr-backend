@@ -16,6 +16,7 @@ export class StaffListService {
 
     async createStaff(createStaffDto: CreateStaffDto):Promise<StaffEntity>{
         const newStaff = this.staffRepository.create(createStaffDto)
+        newStaff.fullName = `${newStaff.firstName} ${newStaff.lastName}`
         return this.staffRepository.save(newStaff);
 
     };

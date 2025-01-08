@@ -8,6 +8,9 @@ import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import { MailService } from 'src/mail/mail.service';
 import { AuthEntity } from 'src/database/entities/auth.entity';
+import { RolesEntity } from 'src/database/entities/roles.entity';
+import { StaffEntity } from 'src/database/entities/staff.entity';
+import { CreateStaffDto } from 'src/staff-list/staff-list.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +19,10 @@ export class AuthService {
     constructor(
         @InjectRepository(AuthEntity)
         private readonly authRepository: Repository<AuthEntity>,
+        @InjectRepository(StaffEntity)
+        private readonly staffRepository: Repository<StaffEntity>,
+        @InjectRepository(RolesEntity)
+        private readonly roleRepository: Repository<RolesEntity>,
         private jwtService: JwtService,
         private readonly mailService: MailService
     ) {}
@@ -25,9 +32,7 @@ export class AuthService {
          const payload = {
              email : user.email,
              fullname : user.fullName,
-             BVN: user.BVN,
-             NIN: user.NIN,
-             DOB: user.DOB
+             role: user.roles
          }
 
          // Generate Access Token
@@ -50,6 +55,35 @@ export class AuthService {
            refreshToken: refreshToken,
          };
      }
+
+     async getJwtTokenEmployee(user: StaffEntity):Promise<any>{
+        this.logger.log(`Generating JWT for user ${user.email}`);
+        const payload = {
+            email : user.email,
+            fullname : user.fullName,
+            role: user.roles
+        }
+
+        // Generate Access Token
+        const token = this.jwtService.sign(payload);
+   
+        // Generate Refresh Token
+        const refreshToken = uuidv4();
+        const refreshTokenExpiry = new Date();
+        refreshTokenExpiry.setDate(refreshTokenExpiry.getDate() + 1);
+   
+        // Update user with refresh token information
+        await this.staffRepository.update(user.id, {
+          refreshToken: refreshToken,
+          refreshTokenExpiry: refreshTokenExpiry,
+        });
+   
+        return {
+          user: user,
+          accessToken: token,
+          refreshToken: refreshToken,
+        };
+    }
 
     // async sendOtp(user: AuthEntity):Promise<void>{
     //     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -97,7 +131,7 @@ export class AuthService {
     // }
 
 
-    async signUp(signUpDto: SignUpDto):Promise <CommonResponse>{
+    async signUpEmployer(signUpDto: SignUpDto):Promise <CommonResponse>{
         const existingUser = await this.authRepository.findOne({where:{email: signUpDto.email}}) 
 
         if (existingUser){
@@ -130,7 +164,61 @@ export class AuthService {
 
     }
 
-    async login(email: string, password: string) :Promise<CommonResponse>{
+    async signUpEmployee(signUpDto: CreateStaffDto):Promise <CommonResponse>{
+        const existingEmployee = await this.staffRepository.findOne({where:{email: signUpDto.email}}) 
+
+        if (existingEmployee){
+            throw new ConflictException ('Already registered')
+        }
+
+        if (signUpDto.password !== signUpDto.confirmPassword){
+            throw new BadRequestException('password and comfirmPassword must be the same')
+        }
+
+        const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
+
+        const newEmployee = this.staffRepository.create({...signUpDto, password : hashedPassword})
+
+        await this.staffRepository.save(newEmployee)
+
+        const token = await this.getJwtTokenEmployee(newEmployee)
+
+        return {
+            statusCode: 201,
+            message:'You have successfully signed up',
+            data: {
+                user: token.user,
+                accessToken: token.accessToken,
+                refreshToken: token.refreshToken,
+                refreshTokenExpiry: token.refreshTokenExpiry,
+            }
+
+        }
+
+    }
+
+    async loginEmployer(email: string, password: string) :Promise<CommonResponse>{
+        this.logger.log(`Attempting login for user with email ${email}`);
+
+        try {
+            const user = await this.authRepository.findOne({where:{
+                email : email
+            }})
+
+            if (user && (await bcrypt.compare(password, user.password)) ) {
+                //await this.sendOtp(user)
+                //return {message: 'OTP sent to your email. Verify to continue'}
+                return await this.getJwtToken(user);
+            } else{
+                throw new UnauthorizedException ('Invalid Credentials')
+            }   
+        } catch (e) {
+                this.logger.error(`Login failed: ${e.message}`);
+                throw new UnauthorizedException('Invalid credentials') 
+        }; 
+    }
+
+    async loginEmployee(email: string, password: string) :Promise<CommonResponse>{
         this.logger.log(`Attempting login for user with email ${email}`);
 
         try {

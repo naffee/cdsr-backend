@@ -5,13 +5,13 @@ import { DashboardService } from './dashboard.service';
 export class DashboardController {
     constructor(private readonly dashboardService: DashboardService) {}
 
-    @Get()
-    async getStaff(){
-        return this.dashboardService.getStaff
-    }
+    // @Get()
+    // async getStaff(){
+    //     return this.dashboardService.getStaff
+    // }
 
-    @Get()
-    async getBackgroungCheck(){
-        return this.dashboardService.getBackgroundChecks
-    }
+    // @Get()
+    // async getBackgroungCheck(){
+    //     return this.dashboardService.getBackgroundChecks
+    // }
 }

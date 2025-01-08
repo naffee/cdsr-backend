@@ -4,6 +4,9 @@ import { CommonResponse } from 'src/helper/common.response';
 import { ApiBearerAuth,ApiBody,ApiTags,ApiOperation,ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignUpDto,LoginDto,VerifyOtpDto,ResendOtpDto } from './auth.dto';
+import { CreateStaffDto } from 'src/staff-list/staff-list.dto';
+import { Roles } from 'src/helper/decorators/roles/roles.decorator';
+import { RolesGuard } from 'src/helper/guards/roles.guard';
 
 
 @Controller('auth')
@@ -11,12 +14,29 @@ export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
      @ApiBearerAuth()
-     @UseGuards(JwtAuthGuard)
+     @UseGuards(JwtAuthGuard,RolesGuard)
      @ApiTags('Auth')
      @Post('login')
-     async login(@Body() loginDto: LoginDto): Promise<any> {
+     @Roles('EMPLOYER')
+     async loginEmployer(@Body() loginDto: LoginDto): Promise<any> {
      try {
-       return await this.authService.login(
+       return await this.authService.loginEmployer(
+         loginDto.email,
+         loginDto.password,
+       );
+     } catch (error) {
+       throw new UnauthorizedException('Login failed, Invalid credentials');
+     }
+     }
+
+     @ApiBearerAuth()
+     @UseGuards(JwtAuthGuard,RolesGuard)
+     @ApiTags('Auth')
+     @Post('login-Employee')
+     @Roles('EMPLOYEE')
+     async loginEmployee(@Body() loginDto: LoginDto): Promise<any> {
+     try {
+       return await this.authService.loginEmployee(
          loginDto.email,
          loginDto.password,
        );
@@ -47,10 +67,18 @@ export class AuthController {
 
     @ApiTags('Register')
     @Post('register-user')
-    async registerUser(
+    async registerEmployer(
     @Body() signUpDto: SignUpDto,
     ): Promise<CommonResponse> {
-        return this.authService.signUp(signUpDto);
-    }               
+        return this.authService.signUpEmployer(signUpDto);
+    }
+    
+    @ApiTags('Register')
+    @Post('register-employee')
+    async registerEmployee(
+    @Body() signUpDto: CreateStaffDto,
+    ): Promise<CommonResponse> {
+        return this.authService.signUpEmployee(signUpDto);
+    }         
 
 }

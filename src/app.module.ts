@@ -17,6 +17,10 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { SeederService } from './database/seeder/seeder.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './helper/guards/roles.guard';
+import { RolesService } from './helper/decorators/roles/roles.service';
+import { RolesModule } from './helper/decorators/roles/roles.module';
 
 @Module({
   imports: [
@@ -27,9 +31,10 @@ import { SeederService } from './database/seeder/seeder.service';
     IncidentReportModule,
     MedicalModule,
     DashboardModule,
-    AuthModule
+    AuthModule,
+    RolesModule
   ],
   controllers: [AppController],
-  providers: [AppService, SeederService],
+  providers: [AppService, SeederService,{provide: APP_GUARD, useClass:RolesGuard}],
 })
 export class AppModule {}

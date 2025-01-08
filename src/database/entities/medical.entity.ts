@@ -1,8 +1,9 @@
-import {Column, ManyToMany,Entity, ManyToOne,JoinTable} from 'typeorm'
+import {Column, ManyToMany,Entity, ManyToOne,JoinTable,OneToMany} from 'typeorm'
 import { CustomEntity } from './custom.entity'
 import { StaffEntity } from './staff.entity'
 import { MedicalCategory } from './medicai-category.entity';
 import { MedicalSubCategoryEntity } from './medical-subcategory.entity';
+import { TestSelectionEntity } from './test-selection.entity';
 
 @Entity('MedicalTest')
 export class MedicalTestEntity extends CustomEntity{
@@ -15,11 +16,14 @@ export class MedicalTestEntity extends CustomEntity{
     @ManyToOne(() => MedicalCategory, (category) => category.medicalTests, { onDelete: 'CASCADE' })
     category: MedicalCategory;
 
-    @ManyToMany(() => StaffEntity, (staff) => staff.medicalTests)
-    @JoinTable()
-    staff: StaffEntity[];
+    // @ManyToMany(() => StaffEntity, (staff) => staff.medicalTests)
+    // @JoinTable()
+    // staff: StaffEntity[];
 
     @ManyToOne(() => MedicalSubCategoryEntity, (subcategory) => subcategory.tests, { onDelete: 'CASCADE', nullable: true })
     subcategory: MedicalSubCategoryEntity;
+
+    @OneToMany(() => TestSelectionEntity, (testSelection) => testSelection.medicalTest)
+    testSelections: TestSelectionEntity[]; // Relationship to TestSelection
 
 }

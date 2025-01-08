@@ -6,6 +6,7 @@ import { StaffEntity } from 'src/database/entities/staff.entity';
 import { MedicalCategory } from 'src/database/entities/medicai-category.entity';
 import { MedicalSubCategoryEntity } from 'src/database/entities/medical-subcategory.entity';
 import { MedicalTestEntity } from 'src/database/entities/medical.entity';
+import { TestSelectionEntity } from 'src/database/entities/test-selection.entity';
 
 
 @Module({
@@ -14,7 +15,9 @@ import { MedicalTestEntity } from 'src/database/entities/medical.entity';
       MedicalCategory,
       MedicalSubCategoryEntity,
       MedicalTestEntity,
-      StaffEntity
+      StaffEntity,
+      TestSelectionEntity
+      
     ])
 
   ],

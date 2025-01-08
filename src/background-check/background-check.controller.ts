@@ -10,18 +10,18 @@ export class BackgroundCheckController {
   constructor(private readonly backgroundCheckService: BackgroundCheckService) {}
 
   // Endpoint to get the background check dashboard data
-  @Get('dashboard')
-  async getBackgroundCheckDashboard(): Promise<BackgroundCheckDashboardDto[]> {
-    return this.backgroundCheckService.getBackgroundCheckDashboard();
-  }
+  // @Get('dashboard')
+  // async getBackgroundCheckDashboard(): Promise<BackgroundCheckDashboardDto[]> {
+  //   return this.backgroundCheckService.getBackgroundCheckDashboard();
+  // }
 
-  @Post()
-  async createBackgroundChecks(
-    @Body() createBackgroundChecksDto: CreateBackgroundCheckDto,
-  ): Promise<BackgroundCheckEntity[]> {
-    const { fullName, selectedCheckTypes, details, status } = createBackgroundChecksDto;
-    return this.backgroundCheckService.createBackgroundChecks(
-      fullName, selectedCheckTypes, details, status,
-    );
-  }
+  // @Post()
+  // async createBackgroundChecks(
+  //   @Body() createBackgroundChecksDto: CreateBackgroundCheckDto,
+  // ): Promise<BackgroundCheckEntity[]> {
+  //   const { fullName, selectedCheckTypes, details, status } = createBackgroundChecksDto;
+  //   return this.backgroundCheckService.createBackgroundChecks(
+  //     fullName, selectedCheckTypes, details, status,
+  //   );
+  // }
 }

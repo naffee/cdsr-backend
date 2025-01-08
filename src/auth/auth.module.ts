@@ -7,6 +7,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategy/local.strategy';
 import { AuthEntity } from 'src/database/entities/auth.entity';
+import { RolesEntity } from 'src/database/entities/roles.entity';
+import { StaffEntity } from 'src/database/entities/staff.entity';
 
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,7 +16,7 @@ require('dotenv').config();
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AuthEntity]),
+    TypeOrmModule.forFeature([AuthEntity,RolesEntity,StaffEntity]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,

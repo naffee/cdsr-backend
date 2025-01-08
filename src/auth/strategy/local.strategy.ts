@@ -17,12 +17,18 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
      this.logger.log(`Validating credentials for ${email}`);
      this.logger.log(`Validating credentials for ${email}`);
      console.log('email', email,);
-     const user = await this.authService.login(email, password);
+     const employee = await this.authService.loginEmployee(email, password);
 
-     if (!user) {
+     const employer = await this.authService.loginEmployer(email, password);
+
+     if (!employee) {
        throw new UnauthorizedException('wrong email or password');
      }
 
-     return user;
+     if (!employer) {
+      throw new UnauthorizedException('wrong email or password');
+    }
+
+     return [employer,employee];
    }
 }

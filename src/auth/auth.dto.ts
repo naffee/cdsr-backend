@@ -1,10 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString,isEmail,isStrongPassword,isNotEmpty, IsDate, IsStrongPassword, ValidateIf, Matches,IsNotEmpty } from "class-validator";
+import { IsString,isEmail,isStrongPassword,isNotEmpty, IsDate, IsStrongPassword, ValidateIf, Matches,IsNotEmpty,IsIn } from "class-validator";
 
 export class SignUpDto{
     @ApiProperty()
     @IsString()
-    fullName: string;
+    firstName: string;
+
+    @ApiProperty()
+    @IsString()
+    middleName: string;
+
+    @ApiProperty()
+    @IsString()
+    lastName: string;
 
     @ApiProperty()
     @IsDate()
@@ -16,15 +24,31 @@ export class SignUpDto{
 
     @ApiProperty()
     @IsString()
-    BVN: string;
+    googleAddress: string;
 
     @ApiProperty()
     @IsString()
-    NIN: string;
+    nationality: string;
 
     @ApiProperty()
     @IsString()
     phoneNumber: string;
+
+    @ApiProperty()
+    @IsString()
+    stateOfOrigin: string;
+
+    @ApiProperty()
+    @IsString()
+    LGA: string;
+
+    @ApiProperty()
+    @IsString()
+    religion: string;
+
+    @ApiProperty()
+    @IsString()
+    gender: string;
 
     @ApiProperty()
     @IsString()
@@ -44,6 +68,12 @@ export class SignUpDto{
     @IsStrongPassword()
     //@ValidateIf((dto)=> password === dto.confirmPassword)
     confirmPassword: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    @IsIn(['Employer','Employee','Government Body','Medical Sector'])
+    role: string;
 
 }
 

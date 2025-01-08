@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsString,IsArray } from "class-validator";
 
 export class MedicalTestDto{
     @ApiProperty()
@@ -47,4 +47,8 @@ export class CreateSubcategoryDto{
     category: string
 }
 
-export class CreateTest{}
+export class SelectTestsForStaffDto{
+    @ApiProperty({ description: 'Array of test IDs' })
+    @IsArray()
+    id: string[];
+}
